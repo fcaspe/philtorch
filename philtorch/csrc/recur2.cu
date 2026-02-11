@@ -10,6 +10,7 @@
 #include <thrust/pair.h>
 #include <thrust/scan.h>
 #include <thrust/transform.h>
+#include <thrust/zip_function.h>
 #include <torch/script.h>
 #include <torch/torch.h>
 

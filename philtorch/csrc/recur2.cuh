@@ -13,7 +13,7 @@ struct recur2_binary_op
         auto [a_a, a_b, a_c, a_d, a_a_vec, a_b_vec] = a;
         auto [b_a, b_b, b_c, b_d, b_a_vec, b_b_vec] = b;
 
-        return cuda::std::make_tuple(
+        return thrust::make_tuple(
             b_a * a_a + b_b * a_c, b_a * a_b + b_b * a_d, b_c * a_a + b_d * a_c,
             b_c * a_b + b_d * a_d, b_a * a_a_vec + b_b * a_b_vec + b_a_vec,
             b_c * a_a_vec + b_d * a_b_vec + b_b_vec);
@@ -23,7 +23,7 @@ struct recur2_binary_op
 template <typename T>
 struct output_unary_op
 {
-    __host__ __device__ cuda::std::tuple<T, T> operator()(
+    __host__ __device__ thrust::tuple<T, T> operator()(
         const sqm2_pair<T> &state) const
     {
         return thrust::make_tuple(thrust::get<4>(state), thrust::get<5>(state));

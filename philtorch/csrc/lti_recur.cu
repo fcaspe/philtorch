@@ -9,6 +9,7 @@
 #include <thrust/functional.h>
 #include <thrust/iterator/transform_output_iterator.h>
 #include <thrust/pair.h>
+#include <thrust/zip_function.h>
 #include <thrust/scan.h>
 #include <thrust/transform.h>
 #include <torch/script.h>
@@ -19,13 +20,13 @@
 template <typename T>
 struct recur_binary_op
 {
-    __host__ __device__ cuda::std::tuple<T, T> operator()(
-        const cuda::std::tuple<T, T> &a,
-        const cuda::std::tuple<T, T> &b) const
+    __host__ __device__ thrust::tuple<T, T> operator()(
+        const thrust::tuple<T, T> &a,
+        const thrust::tuple<T, T> &b) const
     {
         auto [a_first, a_second] = a;
         auto [b_first, b_second] = b;
-        return cuda::std::make_tuple(a_first * b_first,
+        return thrust::make_tuple(a_first * b_first,
                                      a_second * b_first + b_second);
     }
 };
@@ -33,7 +34,7 @@ struct recur_binary_op
 template <typename T>
 struct take_second
 {
-    __host__ __device__ T operator()(const cuda::std::tuple<T, T> &state) const
+    __host__ __device__ T operator()(const thrust::tuple<T, T> &state) const
     {
         return thrust::get<1>(state);
     }
@@ -44,7 +45,7 @@ struct lti_batch_recur_input_op
 {
     const T *decays;
     int n_steps;
-    __host__ __device__ cuda::std::tuple<T, T> operator()(int i, const T &x) const
+    __host__ __device__ thrust::tuple<T, T> operator()(int i, const T &x) const
     {
         int idx = i / n_steps;
         int offset = i % n_steps;
@@ -59,7 +60,7 @@ struct lti_shared_recur_input_op
 {
     const T decay;
     int n_steps;
-    __host__ __device__ cuda::std::tuple<T, T> operator()(int i, const T &x) const
+    __host__ __device__ thrust::tuple<T, T> operator()(int i, const T &x) const
     {
         int offset = i % n_steps;
         if (offset > 0)

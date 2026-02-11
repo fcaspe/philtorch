@@ -8,6 +8,7 @@
 #include <thrust/functional.h>
 #include <thrust/iterator/transform_output_iterator.h>
 #include <thrust/pair.h>
+#include <thrust/zip_function.h>
 #include <thrust/scan.h>
 #include <thrust/transform.h>
 #include <torch/script.h>
